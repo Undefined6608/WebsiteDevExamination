@@ -1,18 +1,21 @@
 import PubSub from "pubsub-js";
+import {NotificationType} from "./publicInterface";
 
-export const BASE_URL = '/api'; // API地址
+// 定义后端地址
+export const BASE_URL = '/api';
 
+// 定义返回值类型模型
+// T:接受的返回值类型
 interface ApiResponse<T> {
+    // 响应值
     code: number;
+    // 响应信息
     msg: string;
+    // 响应数据
     data: T;
 }
 
-type NotificationType = 'success' | 'info' | 'warning' | 'error';
-export const handlerError = (type: NotificationType, description: string, message?: string | '请求失败') => {
-    return PubSub.publish('tips', {type: type, message: message, description: description});
-}
-
+// 网络连接失败
 async function handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
     if (!response.ok) {
         throw new Error('网络请求失败');
@@ -20,11 +23,13 @@ async function handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
     return await response.json();
 }
 
+// get请求
 export async function get<T>(url: string): Promise<ApiResponse<T>> {
     const response = await fetch(BASE_URL + url);
     return await handleResponse<T>(response);
 }
 
+// post请求
 export async function post<T>(url: string, body: any): Promise<ApiResponse<T>> {
     const response = await fetch(BASE_URL + url, {
         method: 'POST',

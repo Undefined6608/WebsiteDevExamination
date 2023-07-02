@@ -1,0 +1,24 @@
+.headerNav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid var(--border-black);
+
+  .header-link {
+    display: inline-block;
+    flex: 1;
+    height: 100%;
+    text-align: center;
+    line-height: 35px;
+    text-decoration: none;
+    color: var(--color);
+    background-color: var(--background-color);
+  }
+
+  .active {
+    color: var(--background-color);
+    background-color: var(--color);
+  }
+}

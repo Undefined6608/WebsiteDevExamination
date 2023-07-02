@@ -1,10 +1,10 @@
 import './App.less'
-import {HeaderComponent} from "./components/headerComponent";
+import {AppRouter} from "./router/appRouter";
 
 function App() {
     return (
         <div className="App">
-            <HeaderComponent width={'100%'} height={'120px'} margin={"0"} />
+            <AppRouter />
         </div>
     )
 }
