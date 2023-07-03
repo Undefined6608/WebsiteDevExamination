@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 // 引入gqt请求方法
 import {get} from "../config/request";
 // 引入logo和副标题响应值类型
-import {GetLogoType, GetSubTitle} from "../config/responseType";
+import {GetLogoType, GetSubTitleType} from "../config/responseType";
 // 引入组件样式
 import "../less/titleComponent.less";
 // 引入公共组件参数接口
@@ -26,16 +26,16 @@ export const TitleComponent: React.FC<SizeType> = ({width, height, margin}) => {
             handlerTips('warning', r.msg);
         }).then((r) => {
             // 输出获取到的数据
-            console.log(r);
+            // console.log(r);
             // 如果存在logo地址，则保存logo地址
             if (r) return setLogo(r.icon);
         })
         // 同理
-        get<GetSubTitle>('/public/subTitle').then((r) => {
+        get<GetSubTitleType>('/public/subTitle').then((r) => {
             if (r.code === 200) return r.data;
             handlerTips('warning', r.msg);
         }).then((r) => {
-            console.log(r);
+            // console.log(r);
             if (r) return setSubTitle(r.title);
         })
     }, []);

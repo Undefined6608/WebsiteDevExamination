@@ -5,7 +5,7 @@ import {SizeType} from "../config/publicInterface";
 // 引入gqt请求方法
 import {get} from "../config/request";
 // 引入导航栏单个条目响应值类型
-import {GetNavItem} from "../config/responseType";
+import {GetNavItemType} from "../config/responseType";
 // 引入开启提示的方法
 import {handlerTips} from "../utils";
 // 引入路由跳转组件
@@ -22,24 +22,33 @@ import "../less/headerNav.less";
  */
 export const HeaderNav: React.FC<SizeType> = ({width, height, margin}) => {
     // 创建导航列表状态
-    const [navList, setNavLiat] = useState<Array<GetNavItem>>([]);
+    const [navList, setNavLiat] = useState<Array<GetNavItemType>>([]);
     // 创建选择条目状态，默认为 a
     const [status, setStatus] = useState<string>('a');
+    // 创建路径状态
+    const [pathName, setPathName] = useState<string>('/');
     // 组件被调用时执行一次
     useEffect(() => {
         // 通过get请求，获取导航条的数据
-        get<{ list: Array<GetNavItem> }>('/public/navList').then((r) => {
+        get<{ list: Array<GetNavItemType> }>('/public/navList').then((r) => {
             // 如果响应值为200 则返回数据
             if (r.code === 200) return r.data.list
             // 如果不为200，则给出提示
             handlerTips('warning', r.msg);
         }).then((r) => {
             // 输出查看响应数据
-            console.log(r);
+            // console.log(r);
             // 如果数据存在，则保存数据到状态中
             if (r) return setNavLiat(r);
         })
-    }, [])
+        const pathNameTemp = window.location.pathname;
+        setPathName(pathNameTemp);
+        if (pathNameTemp === '/') return setStatus('a');
+        if (pathNameTemp === '/about') return setStatus('b');
+        if (pathNameTemp === '/product') return setStatus('c');
+        if (pathNameTemp === '/information') return setStatus('d');
+        if (pathNameTemp === '/contact') return setStatus('e');
+    }, [window.location.pathname])
     return (
         <>
             {/*将父组件传来的组件样式设置为div样式*/}

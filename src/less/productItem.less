@@ -1,0 +1,24 @@
+.productItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  background-color: var(--background-color);
+
+  .product-item-img {
+    width: 90%;
+    height: 80%;
+    border: 1px solid var(--background-color);
+    transition: border 1s;
+  }
+
+  .product-item-img:hover {
+    border-color: var(--color);
+
+  }
+
+  .product-item-name {
+    font-size: 14px;
+    color: var(--light-black-color);
+  }
+}
