@@ -1,0 +1,40 @@
+.information-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+  border-bottom: 1px dashed #e5e5e5;
+  font-size: 14px;
+
+  .information-item-icon {
+    width: 84px;
+    height: 84px;
+    background: #f2f2f2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .day{
+      font-size: 20px;
+    }
+  }
+
+  .information-item-right {
+    width: 85%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    color: var(--light-black-color);
+    justify-content: space-around;
+
+    .information-item-title:hover{
+      color: #ed3da1;
+    }
+  }
+
+}
+
+.information-item:last-child {
+  border-bottom: none;
+}

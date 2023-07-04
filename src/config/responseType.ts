@@ -90,14 +90,42 @@ export type HomeThreeDataType = {
 };
 // 定义单个联系方式数据类型
 export type ContactItemType = {
-    id:string,
-    icon:string,
-    mtd:string,
-    val:string
+    id: string,
+    icon: string,
+    mtd: string,
+    val: string
 };
 // 首页第四个模块数据类型
 export type HomeFourDataType = {
-    title:string,
-    subTitle:string,
-    list:Array<ContactItemType>
+    title: string,
+    subTitle: string,
+    list: Array<ContactItemType>
 };
+// 关于喜敷页面单个数据类型
+export type AboutItemType = {
+    id: string,
+    title: string,
+    subTitle: string,
+    mainImg: string,
+    bgImg: string,
+    context: Array<{
+        id: string,
+        msg: string
+    }>
+};
+// 关于喜敷页面数据类型
+export type AboutListType = Array<AboutItemType>;
+// 喜敷资讯单个条目类型
+export type InformationItemType = {
+    id: string,
+    month: string,
+    day: string,
+    title: string,
+    context: string
+};
+// 喜敷资讯数据格式
+export type InformationDataType = {
+    title: string,
+    subTitle: string,
+    list: Array<InformationItemType>
+}

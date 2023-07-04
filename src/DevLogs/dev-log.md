@@ -1862,11 +1862,605 @@ export const Product = () => {
 }
 ```
 
+## 23.7.4
+
+### I、关于我们图片模块
+
+在`components`文件夹中新建`aboutImg.tsx`：
+
+```tsx
+import React from "react";
+import {SizeType} from "../config/publicInterface";
+import "../less/aboutImg.less";
+
+interface AboutImgParam extends SizeType {
+    mainImg: string,
+    bgImg: string
+}
+
+export const AboutImg: React.FC<AboutImgParam> = ({width, height, margin, mainImg, bgImg}) => {
+    return (
+        <div className={"aboutImgBox"}
+             style={{width: width, height: height, margin: margin}}>
+            <img className={"bgImg"} src={bgImg} alt=""/>
+            <img className={"aboutImg"} src={mainImg} alt=""/>
+        </div>
+    )
+}
+```
+
+在`less`文件夹中新建`aboutImg.less`：
+
+```less
+.aboutImgBox{
+  position: relative;
+  .bgImg{
+    width: 100%;
+    height: 100%;
+  }
+  .aboutImg{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 30px;
+    right: 30px;
+  }
+}
+```
+
+效果图：
+
+![](http://39.101.72.168:81/image/examination/log/Snipaste_2023-07-03_11-19-11.png)
 
 
 
+### II、关于我们单个条目
+
+在`responseType.ts`中：
+
+```ts
+// 关于喜敷页面单个数据类型
+export type AboutItemType = {
+    id: string,
+    title: string,
+    subTitle: string,
+    mainImg: string,
+    bgImg: string,
+    context: Array<{
+        id: string,
+        msg: string
+    }>
+};
+```
+
+在`components`文件夹中新建`aboutItem.tsx`：
+
+```tsx
+import React from "react";
+import {SizeType} from "../config/publicInterface";
+import {AboutItemType} from "../config/responseType";
+import {AboutImg} from "./aboutImg";
+import {ModuleTitle} from "./moduleTitle";
+import "../less/aboutMsgItem.less";
+
+interface AboutMsgItemParam extends SizeType {
+    data: AboutItemType,
+    layout: boolean,
+    style: {
+        imgWidth: string,
+        imgHeight: string,
+        contextWidth: string,
+        contextHeight: string
+    }
+}
+
+export const AboutMsgItem: React.FC<AboutMsgItemParam> = ({width, height, margin, data, layout, style}) => {
+    return (
+        <div className={"aboutMsgItem"}
+             style={{width: width, height: height, margin: margin, flexDirection: `${layout ? 'row' : 'row-reverse'}`}}>
+            <AboutImg mainImg={data.mainImg} bgImg={data.bgImg} width={style.imgWidth} height={style.imgHeight}
+                      margin={"0"}/>
+            <div className={"aboutMsgItemRight"}>
+                <ModuleTitle title={data.title} subTitle={data.subTitle} textCenter={false} width={"100%"}
+                             height={"auto"} margin={"0"}/>
+                <div className={"aboutMsgItemContext"} style={{width: style.contextWidth, height: style.contextHeight}}>
+                    {
+                        data.context.map((value) => (
+                            <span key={value.id}>{value.msg}</span>
+                        ))
+                    }
+                </div>
+            </div>
+        </div>
+    )
+}
+```
+
+在`less`文件夹中新建`aboutItem.less`：
+
+```less
+.aboutMsgItem{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  .aboutMsgItemRight{
+    width: 60%;
+    height: 60%;
+    display: flex;
+    margin-left: 10px;
+    flex-direction: column;
+    justify-content: space-around;
+
+    .aboutMsgItemContext{
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      color: var(--light-black-color);
+    }
+  }
+}
+```
+
+效果图：
+
+![](http://39.101.72.168:81/image/examination/log/Snipaste_2023-07-03_11-19-11.png)
 
 
+
+### III、关于我们列表模块
+
+在`responseType.ts`中：
+
+```ts
+// 关于喜敷页面数据类型
+export type AboutListType = Array<AboutItemType>;
+```
+
+在`components`文件夹中新建`aboutList.tsx`：
+
+```tsx
+import React, {useState} from "react";
+import {SizeType} from "../config/publicInterface";
+import {AboutListType} from "../config/responseType";
+import {AboutMsgItem} from "./aboutMsgItem";
+import "../less/aboutMsgList.less";
+
+interface AboutMsgListParam extends SizeType {
+    data: AboutListType
+}
+
+export const AboutMsgList: React.FC<AboutMsgListParam> = ({width, height, margin, data}) => {
+    return (
+        <>
+            {
+                data ?
+                    <div className={"aboutMsgList"} style={{width: width, height: height, margin: margin}}>
+                        {
+                            <>
+                                <AboutMsgItem key={data[0].id} data={data[0]} layout={true} width={"100%"}
+                                              height={"800px"} margin={"0"} style={{
+                                    imgWidth: "420px",
+                                    imgHeight: "600px",
+                                    contextWidth: "100%",
+                                    contextHeight: "400px"
+                                }}/>
+                                <AboutMsgItem key={data[1].id} data={data[1]} layout={false} width={"100%"}
+                                              height={"600px"} margin={"0"} style={{
+                                    imgWidth: "420px",
+                                    imgHeight: "388px",
+                                    contextWidth: "50%",
+                                    contextHeight: "200px"
+                                }}/>
+                            </>
+                        }
+                    </div> :
+                    null
+            }
+        </>
+    )
+}
+```
+
+在`less`文件夹中新建`aboutList.less`：
+
+```less
+.aboutMsgList{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
+```
+
+效果图：
+
+![](http://39.101.72.168:81/image/examination/log/Snipaste_2023-07-03_11-19-11.png)
+
+
+
+### IV、关于我们页面
+
+在`components`文件夹中新建`about.tsx`：
+
+```tsx
+import {PageImg} from "../components/pageImg";
+import {useEffect, useState} from "react";
+import {AboutListType} from "../config/responseType";
+import {get} from "../config/request";
+import {handlerTips} from "../utils";
+import {AboutMsgList} from "../components/aboutMsgList";
+
+export const About = () => {
+    const [data, setData] = useState<{ list: AboutListType }>();
+    useEffect(() => {
+        get<{ list: AboutListType }>('/about/getAboutList').then((r) => {
+            if (r.code === 200) return r.data;
+            handlerTips('warning', '数据错误！', '请求失败!');
+        }).then((r) => {
+            setData(r);
+        })
+    }, []);
+    return (
+        <>
+            <div className={"pubP"}>
+                <PageImg pageId={'b'} width={'100%'} height={'380px'} margin={'0'} imgUrl={''} imgWidth={"120%"}/>
+                {
+                    data ?
+                        <AboutMsgList data={data.list} width={"80%"} height={"1337px"} margin={"0 auto"}/> :
+                        null
+                }
+            </div>
+        </>
+    )
+}
+```
+
+### V、联系我们地图模块
+
+在`index.html`中：
+
+```ts
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=3.0&ak=YOU-AK"></script>
+```
+
+在`components`文件夹中新建`bMap.tsx`：
+
+```tsx
+import React, {useEffect} from "react";
+import {SizeType} from "../config/publicInterface";
+
+export const BMap: React.FC<SizeType> = ({width, height, margin}) => {
+    useEffect(()=>{
+        const map = new window.BMap.Map('map-container');
+        // 设置地图中心点和缩放级别
+        const point = new window.BMap.Point(117.933166,36.833957);
+        map.centerAndZoom(point, 17);
+        map.enableScrollWheelZoom();
+    },[]);
+    return (
+        <div id={"map-container"} style={{width: width, height: height, margin: margin}}></div>
+    )
+}
+```
+
+效果图：
+
+![](http://39.101.72.168:81/image/examination/log/Snipaste_2023-07-03_11-19-11.png)
+
+
+
+### VI、联系我们表单模块
+
+在`components`文件夹中新建`contactForm.tsx`：
+
+```tsx
+import React from "react";
+import {SizeType} from "../config/publicInterface";
+import {Button, Form, Input} from "antd";
+import {post} from "../config/request";
+import {handlerTips} from "../utils";
+
+
+interface DataNodeType {
+    value: string;
+    label: string;
+    children?: DataNodeType[];
+}
+
+export const ContactForm: React.FC<SizeType> = ({width, height, margin}) => {
+    const [form] = Form.useForm();
+    const onFinish = (values: any) => {
+        post<object>('/contact/pushForm', {
+            name: values.name,
+            phone: values.phone,
+            email: values.email,
+            context: values.context
+        }).then((r) => {
+            if (r.code === 200) return handlerTips('success', '表单提交成功！', '成功');
+            handlerTips('warning', r.msg, '表单提交失败！');
+        })
+    };
+    return (
+        <div className={"contactForm"} style={{width: width, height: height, margin: margin}}>
+            <Form
+                form={form}
+                name="register"
+                style={{display: "flex", flexWrap: "wrap", justifyContent: "space-between", alignItems: "center"}}
+                onFinish={onFinish}
+                scrollToFirstError
+            >
+                <Form.Item
+                    name="name"
+                    label="姓名"
+                    style={{width: "30%"}}
+                    rules={[
+                        {
+                            required: true,
+                            message: '姓名不能为空！',
+                        },
+                    ]}
+                >
+                    <Input/>
+                </Form.Item>
+
+                <Form.Item
+                    name="email"
+                    label="邮箱"
+                    style={{width: "30%"}}
+                    rules={[
+                        {
+                            type: 'email',
+                            message: '邮箱格式错误!',
+                        },
+                        {
+                            required: true,
+                            message: '邮箱不能为空!',
+                        },
+                    ]}
+                >
+                    <Input/>
+                </Form.Item>
+
+                <Form.Item
+                    name="phone"
+                    label="电话"
+                    style={{width: "30%"}}
+                    tooltip="What do you want others to call you?"
+                    rules={[{required: true, message: '电话号码不能为空！', whitespace: true}]}
+                >
+                    <Input/>
+                </Form.Item>
+
+                <Form.Item
+                    name="context"
+                    label="内容"
+                    style={{width: "33%"}}
+                    rules={[{required: true, message: '请输入内容'}]}
+                >
+                    <Input.TextArea showCount maxLength={100}/>
+                </Form.Item>
+                <Form.Item style={{width: "33%", height: "40px"}}>
+                    <Button type="primary" style={{width: "100%", height: "100%"}} htmlType="submit">
+                        提交留言
+                    </Button>
+                </Form.Item>
+            </Form>
+        </div>
+    )
+}
+```
+
+效果图：
+
+![](http://39.101.72.168:81/image/examination/log/Snipaste_2023-07-03_11-19-11.png)
+
+
+
+### VII、联系我们页面
+
+在`contact.tsx`中：
+
+```tsx
+import {PageImg} from "../components/pageImg";
+import {HomeFour} from "../components/homeFour";
+import {BMap} from "../components/bMap";
+import {ContactForm} from "../components/contactForm";
+
+export const Contact = () => {
+    return(
+        <>
+            <div className={"pubP"}>
+                <PageImg pageId={'e'} width={'100%'} height={'800px'} margin={'0'} imgUrl={''} imgWidth={"120%"}/>
+                <HomeFour width={"90%"} height={"395px"} margin={"0 auto"} />
+                <BMap width={"80%"} height={"460px"} margin={"30px auto"}/>
+                <ContactForm width={"80%"} height={"288"} margin={"100px auto"}/>
+            </div>
+        </>
+    )
+}
+```
+
+### II、关于我们单个条目
+
+在`responseType.ts`中：
+
+```ts
+
+```
+
+在`components`文件夹中新建`aboutItem.tsx`：
+
+```tsx
+
+```
+
+在`less`文件夹中新建`aboutItem.less`：
+
+```less
+
+```
+
+效果图：
+
+![](http://39.101.72.168:81/image/examination/log/Snipaste_2023-07-03_11-19-11.png)
+
+
+
+### II、关于我们单个条目
+
+在`responseType.ts`中：
+
+```ts
+
+```
+
+在`components`文件夹中新建`aboutItem.tsx`：
+
+```tsx
+
+```
+
+在`less`文件夹中新建`aboutItem.less`：
+
+```less
+
+```
+
+效果图：
+
+![](http://39.101.72.168:81/image/examination/log/Snipaste_2023-07-03_11-19-11.png)
+
+
+
+### II、关于我们单个条目
+
+在`responseType.ts`中：
+
+```ts
+
+```
+
+在`components`文件夹中新建`aboutItem.tsx`：
+
+```tsx
+
+```
+
+在`less`文件夹中新建`aboutItem.less`：
+
+```less
+
+```
+
+效果图：
+
+![](http://39.101.72.168:81/image/examination/log/Snipaste_2023-07-03_11-19-11.png)
+
+
+
+### II、关于我们单个条目
+
+在`responseType.ts`中：
+
+```ts
+
+```
+
+在`components`文件夹中新建`aboutItem.tsx`：
+
+```tsx
+
+```
+
+在`less`文件夹中新建`aboutItem.less`：
+
+```less
+
+```
+
+效果图：
+
+![](http://39.101.72.168:81/image/examination/log/Snipaste_2023-07-03_11-19-11.png)
+
+
+
+### II、关于我们单个条目
+
+在`responseType.ts`中：
+
+```ts
+
+```
+
+在`components`文件夹中新建`aboutItem.tsx`：
+
+```tsx
+
+```
+
+在`less`文件夹中新建`aboutItem.less`：
+
+```less
+
+```
+
+效果图：
+
+![](http://39.101.72.168:81/image/examination/log/Snipaste_2023-07-03_11-19-11.png)
+
+
+
+### II、关于我们单个条目
+
+在`responseType.ts`中：
+
+```ts
+
+```
+
+在`components`文件夹中新建`aboutItem.tsx`：
+
+```tsx
+
+```
+
+在`less`文件夹中新建`aboutItem.less`：
+
+```less
+
+```
+
+效果图：
+
+![](http://39.101.72.168:81/image/examination/log/Snipaste_2023-07-03_11-19-11.png)
+
+
+
+### II、关于我们单个条目
+
+在`responseType.ts`中：
+
+```ts
+
+```
+
+在`components`文件夹中新建`aboutItem.tsx`：
+
+```tsx
+
+```
+
+在`less`文件夹中新建`aboutItem.less`：
+
+```less
+
+```
+
+效果图：
+
+![](http://39.101.72.168:81/image/examination/log/Snipaste_2023-07-03_11-19-11.png)
 
 
 
