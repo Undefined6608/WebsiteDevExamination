@@ -2282,24 +2282,92 @@ export const Contact = () => {
 }
 ```
 
-### II、关于我们单个条目
+### VIII、喜敷资讯单个条目
 
 在`responseType.ts`中：
 
 ```ts
-
+// 喜敷资讯单个条目类型
+export type InformationItemType = {
+    id: string,
+    month: string,
+    day: string,
+    title: string,
+    context: string
+};
 ```
 
-在`components`文件夹中新建`aboutItem.tsx`：
+在`components`文件夹中新建`informationItem.tsx`：
 
 ```tsx
+import React from "react";
+import {SizeType} from "../config/publicInterface";
+import {InformationItemType} from "../config/responseType";
+import "../less/informationItem.less";
 
+interface InformationItemParam extends SizeType {
+    data: InformationItemType
+}
+
+export const InformationItem: React.FC<InformationItemParam> = ({width, height, margin, data}) => {
+    return (
+        <div className={"information-item"} style={{width: width, height: height, margin: margin}}>
+            <div className={"information-item-icon"}>
+                <span className={"day"}>{data.day}</span>
+                <span className={"month"}>{data.month}</span>
+            </div>
+            <div className={"information-item-right"}>
+                <span className={"information-item-title"}>{data.title}</span>
+                <span className={"information-item-context"}>{data.context}</span>
+            </div>
+        </div>
+    )
+}
 ```
 
-在`less`文件夹中新建`aboutItem.less`：
+在`less`文件夹中新建`informationItem.less`：
 
 ```less
+.information-item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+  border-bottom: 1px dashed #e5e5e5;
+  font-size: 14px;
 
+  .information-item-icon {
+    width: 84px;
+    height: 84px;
+    background: #f2f2f2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .day{
+      font-size: 20px;
+    }
+  }
+
+  .information-item-right {
+    width: 85%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    color: var(--light-black-color);
+    justify-content: space-around;
+
+    .information-item-title:hover{
+      color: #ed3da1;
+    }
+  }
+
+}
+
+.information-item:last-child {
+  border-bottom: none;
+}
 ```
 
 效果图：
@@ -2308,24 +2376,43 @@ export const Contact = () => {
 
 
 
-### II、关于我们单个条目
+### IX、喜敷资讯列表
 
-在`responseType.ts`中：
-
-```ts
-
-```
-
-在`components`文件夹中新建`aboutItem.tsx`：
+在`components`文件夹中新建`informationList.tsx`：
 
 ```tsx
+import React from "react";
+import {SizeType} from "../config/publicInterface";
+import {InformationItemType} from "../config/responseType";
+import {InformationItem} from "./informationItem";
+import "../less/informationList.less";
 
+interface InformationListParam extends SizeType {
+    data: Array<InformationItemType>
+}
+
+export const InformationList: React.FC<InformationListParam> = ({width, height, margin, data}) => {
+    return (
+        <div className={"information-list"} style={{width: width, height: height, margin: margin}}>
+            {
+                data.map((value) => (
+                    <InformationItem key={value.id} data={value} width={"100%"} height={"150px"} margin={"0"}/>
+                ))
+            }
+        </div>
+    )
+}
 ```
 
-在`less`文件夹中新建`aboutItem.less`：
+在`less`文件夹中新建`informationList.less`：
 
 ```less
-
+.information-list{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
 ```
 
 效果图：
@@ -2334,135 +2421,62 @@ export const Contact = () => {
 
 
 
-### II、关于我们单个条目
+### X、喜敷资讯页面
 
 在`responseType.ts`中：
 
 ```ts
-
+// 喜敷资讯数据格式
+export type InformationDataType = {
+    title: string,
+    subTitle: string,
+    list: Array<InformationItemType>
+};
 ```
 
-在`components`文件夹中新建`aboutItem.tsx`：
+在`components`文件夹中新建`information.tsx`：
 
 ```tsx
+import {PageImg} from "../components/pageImg";
+import {useEffect, useState} from "react";
+import {get} from "../config/request";
+import {InformationDataType} from "../config/responseType";
+import {handlerTips} from "../utils";
+import {ModuleTitle} from "../components/moduleTitle";
+import {InformationList} from "../components/informationList";
 
+export const Information = () => {
+    const [data, setData] = useState<InformationDataType>();
+    useEffect(() => {
+        get<InformationDataType>('/information/getInformationData').then((r) => {
+            if (r.code === 200) return r.data;
+            handlerTips('warning', '获取失败！', '请求失败！');
+        }).then((r) => {
+            if (r) {
+                setData(r);
+            }
+        })
+    }, []);
+    return (
+        <>
+            <div className={"pubP"}>
+                <PageImg pageId={'d'} width={'100%'} height={'380px'} margin={'0'} imgUrl={''} imgWidth={"120%"}/>
+                {
+                    data ?
+                        <>
+                            <ModuleTitle title={data.title} subTitle={data.subTitle} textCenter={true} width={"100%"}
+                                         height={"auto"} margin={"30px auto"}/>
+                            <InformationList data={data.list} width={"80%"} height={"auto"} margin={"30px auto"}/>
+                        </> :
+                        null
+                }
+            </div>
+        </>
+    )
+}
 ```
 
-在`less`文件夹中新建`aboutItem.less`：
-
-```less
-
-```
-
-效果图：
-
-![](http://39.101.72.168:81/image/examination/log/Snipaste_2023-07-03_11-19-11.png)
-
-
-
-### II、关于我们单个条目
-
-在`responseType.ts`中：
-
-```ts
-
-```
-
-在`components`文件夹中新建`aboutItem.tsx`：
-
-```tsx
-
-```
-
-在`less`文件夹中新建`aboutItem.less`：
-
-```less
-
-```
-
-效果图：
-
-![](http://39.101.72.168:81/image/examination/log/Snipaste_2023-07-03_11-19-11.png)
-
-
-
-### II、关于我们单个条目
-
-在`responseType.ts`中：
-
-```ts
-
-```
-
-在`components`文件夹中新建`aboutItem.tsx`：
-
-```tsx
-
-```
-
-在`less`文件夹中新建`aboutItem.less`：
-
-```less
-
-```
-
-效果图：
-
-![](http://39.101.72.168:81/image/examination/log/Snipaste_2023-07-03_11-19-11.png)
-
-
-
-### II、关于我们单个条目
-
-在`responseType.ts`中：
-
-```ts
-
-```
-
-在`components`文件夹中新建`aboutItem.tsx`：
-
-```tsx
-
-```
-
-在`less`文件夹中新建`aboutItem.less`：
-
-```less
-
-```
-
-效果图：
-
-![](http://39.101.72.168:81/image/examination/log/Snipaste_2023-07-03_11-19-11.png)
-
-
-
-### II、关于我们单个条目
-
-在`responseType.ts`中：
-
-```ts
-
-```
-
-在`components`文件夹中新建`aboutItem.tsx`：
-
-```tsx
-
-```
-
-在`less`文件夹中新建`aboutItem.less`：
-
-```less
-
-```
-
-效果图：
-
-![](http://39.101.72.168:81/image/examination/log/Snipaste_2023-07-03_11-19-11.png)
-
-
+前端开发到此结束。
 
 
 

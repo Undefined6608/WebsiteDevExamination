@@ -128,4 +128,4 @@ export type InformationDataType = {
     title: string,
     subTitle: string,
     list: Array<InformationItemType>
-}
+};
